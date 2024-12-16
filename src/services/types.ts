@@ -5,6 +5,14 @@ export type Post = {
   text: string
 }
 
-export type PostItem = Pick<Post,'id' | 'title'> &{
-  author: string
+export type User = {
+  id: number,
+  name: string
+}
+
+export type Comment = {
+  id: number,
+  userId: number
+  postId: number
+  text: string
 }

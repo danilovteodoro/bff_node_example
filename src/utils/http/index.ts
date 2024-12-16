@@ -8,8 +8,8 @@ export class Http {
     })
   }
 
-  async get<T>(path: string): Promise<T> {
-    const response: AxiosResponse<T> = await this.client.get(path)
+  async get<T>(path: string, queryParams: Record<string, any> | undefined = undefined): Promise<T> {
+    const response: AxiosResponse<T> = await this.client.get(path, {params: queryParams})
     return response.data
   }
 }

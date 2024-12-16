@@ -1,29 +1,18 @@
 import { Http } from "../../utils/http";
-import { Post, PostItem } from "../types";
+import { Post } from "../types";
 
 export class PostService {
-  private  client: Http
+  private client: Http
 
   constructor () {
     this.client = new Http('http://localhost:3001')
   }
 
-  async getPosts(limit: number = 5): Promise<PostItem[]>{
+  async getPosts(limit: number = 5): Promise<Post[]>{
     try {
       const posts: Post[] = await this.client.get('/posts')
-      const postItems: PostItem[] = []
-      
-      for(const post of posts) {
-        if(postItems.length >= limit) break
 
-        postItems.push({
-          id: post.id,
-          title: post.title,
-          author: "todo"
-        })
-      }
-
-      return postItems
+      return posts.slice(0, limit)
     } catch(error) {
       throw error
     }
