@@ -25,8 +25,16 @@ export class PostService {
 
       return postItems
     } catch(error) {
-      console.log(error)
       throw error
     }
+  }
+
+  async getPost(id: number): Promise<Post> {
+   try {
+    const post: Post = await this.client.get(`/posts/${id}`)
+    return post
+   } catch(error) {
+     throw error
+   }
   }
 }

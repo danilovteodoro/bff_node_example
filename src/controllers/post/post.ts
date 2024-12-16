@@ -1,5 +1,5 @@
 import { PostService } from "../../services/post";
-import { PostItem } from "../../services/types";
+import { PostItem, Post } from "../../services/types";
 
 export class PostController {
   private postService: PostService
@@ -14,6 +14,15 @@ export class PostController {
     } catch(error) {
       console.log(error)
       return []
+    }
+  }
+
+  async getPost(id: number): Promise<Post> {
+    try {
+      return await this.postService.getPost(id)
+    } catch(error) {
+      console.log(error)
+      return {} as Post
     }
   }
 }

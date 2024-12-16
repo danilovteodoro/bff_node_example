@@ -13,6 +13,12 @@ app.get('/posts', async(req, res) => {
   res.json(posts)
 })
 
+app.get('/posts/:id', async(req, res) => {
+  const id: number = parseInt(req.params.id)
+  const post = await postController.getPost(id)
+  res.json(post)
+})
+
 app.listen(3000, () => {
   return console.log(`Express is listening at http://localhost:3000`);
 })
