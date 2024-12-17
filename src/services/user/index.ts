@@ -10,7 +10,13 @@ export class UserService {
 
   async getUser(id: number): Promise<User> {
     try {
-      const user: User = await this.client.get(`/users/${id}`)
+      const user: User = await this.client.request({
+        url: `/users/${id}`,
+        method: 'GET'
+      },{
+        timeout: 3000
+      })
+
       return user
     } catch(error) {
       throw error

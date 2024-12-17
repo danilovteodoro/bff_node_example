@@ -10,7 +10,12 @@ export class PostService {
 
   async getPosts(limit: number = 5): Promise<Post[]>{
     try {
-      const posts: Post[] = await this.client.get('/posts')
+      const posts: Post[] = await this.client.request({
+        url: '/posts',
+        method: 'GET'
+      },{
+        timeout: 3000
+      })
 
       return posts.slice(0, limit)
     } catch(error) {
@@ -20,7 +25,12 @@ export class PostService {
 
   async getPost(id: number): Promise<Post> {
    try {
-    const post: Post = await this.client.get(`/posts/${id}`)
+    const post: Post = await this.client.request({
+      url:`/posts/${id}`,
+      method: 'GET'
+    },{
+      timeout: 3000
+    })
     return post
    } catch(error) {
      throw error
