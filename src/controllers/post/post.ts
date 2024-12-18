@@ -7,24 +7,35 @@ import {
   User as UserApi,
   Comment as CommentApi
 } from "../../services/types";
+import { GetPostsCb } from '../../circute_breaker/post/getPostsCb';
+import { GetUserCb } from "../../circute_breaker/user/getUserCb";
+import { GetCommentsCb } from "../../circute_breaker/comment/getCommentsCb";
+import { GetPostCb } from "../../circute_breaker/post/getPostCb";
 
 export class PostController {
-  private postService: PostService
-  private userService: UserService
-  private commentService: CommentService
+
+  private cbGetPosts: GetPostsCb
+  private cbGetPost: GetPostCb
+  private cbGetUser: GetUserCb
+  private cbGetComments: GetCommentsCb
 
   constructor() {
-    this.postService = new PostService()
-    this.userService = new UserService()
-    this.commentService = new CommentService()
+    const postService = new PostService()
+    const userService = new UserService()
+    const commentService = new CommentService()
+    
+    this.cbGetPosts = new GetPostsCb(postService)
+    this.cbGetPost = new GetPostCb(postService)
+    this.cbGetUser = new GetUserCb(userService)
+    this.cbGetComments = new GetCommentsCb(commentService)
   }
 
   async getPosts(): Promise<PostItem[]>{
     try {
-      const posts = await this.postService.getPosts()
+      const posts = await this.cbGetPosts.getPosts()
 
       const resultPromises = posts.map(async(post) => {
-        const user = await this.userService.getUser(post.authorId)
+        const user = await this.cbGetUser.getUser(post.authorId)
 
         return {
           id: post.id,
@@ -44,14 +55,16 @@ export class PostController {
   async getPost(id: number): Promise<Post> {
     try {
       const [postApi, commentsApi] =  await Promise.all([
-        this.postService.getPost(id),
-        this.commentService.getComments(id),
+        this.cbGetPost.getPost(id),
+        this.cbGetComments.getComments(id),
       ])
 
-      const author: UserApi =  await this.userService.getUser(id)
+      console.log(commentsApi)
+
+      const author: UserApi =  await this.cbGetUser.getUser(id)
 
       const commentsPromises = commentsApi.map(async(comment) => {
-        const user = await this.userService.getUser(comment.userId)
+        const user = await this.cbGetUser.getUser(comment.userId)
 
         return {
           user: user.name,
