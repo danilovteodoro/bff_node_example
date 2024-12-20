@@ -1,25 +1,20 @@
-import CircuitBreaker from "opossum";
+import { GenericCircuitBreaker } from "circute_breaker/GenericCircuitBreaker";
 import { PostService } from "services/post";
 import { Post } from "services/types";
 
 
-export class GetPostsCb extends CircuitBreaker<unknown[], Post[]> {
+export class GetPostsCb extends GenericCircuitBreaker<unknown[], Post[]> {
+  private postService: PostService
   constructor(postService: PostService) {
-    super(async () => {
-      this.fallback(async() => {
-        return [] as Post[]
-
-      })
-
-      this.addListener('fallback', ()=> console.log('fallback'))
-      this.addListener('reject', ()=> console.log('reject'))
-      this.addListener('failure', ()=> console.log('failure'))
-
-      return postService.getPosts()
-    },{
+    super( {
       errorThresholdPercentage: 90,
       resetTimeout: 10000
     })
+    this.postService = postService
+  }
+
+  async execute(): Promise<Post[]> {
+    return await this.postService.getPosts()
   }
  
   async getPosts() {

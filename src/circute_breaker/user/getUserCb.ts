@@ -1,17 +1,16 @@
-import CircuitBreaker from "opossum";
 import { UserService } from "services/user";
 import { User } from "services/types";
+import { GenericCircuitBreaker } from "circute_breaker/GenericCircuitBreaker";
 
-export class GetUserCb extends CircuitBreaker<number[], User> {
+export class GetUserCb extends GenericCircuitBreaker<number[], User> {
+  private userService: UserService
   constructor(userService: UserService) {
-    super(async(id: number) => {
-      return userService.getUser(id)
-    },{
-      errorThresholdPercentage: 10,
-      resetTimeout: 10000
-    })
+    super()
+    this.userService = userService
+  }
 
-    this.fallback(async() => {})
+  async execute(params: number[]): Promise<User> {
+    return await this.userService.getUser(params[0])
   }
 
   async getUser(id: number): Promise<User> {

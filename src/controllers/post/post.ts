@@ -59,8 +59,6 @@ export class PostController {
         this.cbGetComments.getComments(id),
       ])
 
-      console.log(commentsApi)
-
       const author: UserApi =  await this.cbGetUser.getUser(id)
 
       const commentsPromises = commentsApi.map(async(comment) => {

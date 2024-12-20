@@ -1,23 +1,17 @@
-import CircuitBreaker from "opossum";
+import { GenericCircuitBreaker } from "circute_breaker/GenericCircuitBreaker";
 import { CommentService } from "services/comment";
 import { Comment } from "services/types";
 
-export class GetCommentsCb extends CircuitBreaker<number[], Comment[]> {
-  constructor(commentService: CommentService) {
-    super(
-      async(postId: number): Promise<Comment[]> => {
-        return await commentService.getComments(postId)
-      },{
-        errorThresholdPercentage: 10,
-        resetTimeout: 10000
-      }
-    )
+export class GetCommentsCb extends GenericCircuitBreaker<number[], Comment[]> {
 
-    this.fallback(async() => [])
+  private commentService: CommentService
+  constructor(commentService: CommentService) {
+    super()
+    this.commentService = commentService
   }
 
-  private async tt(postId: number): Promise<Comment[]> {
-    return await new CommentService().getComments(postId)
+  async execute(params: number[]): Promise<Comment[]> {
+    return await this.commentService.getComments(params[0])
   }
 
   async getComments(postId: number): Promise<Comment[]> {
