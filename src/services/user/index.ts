@@ -1,5 +1,5 @@
-import { Http } from "../../utils/http";
-import {User}  from "../types";
+import { Http } from '../../utils/http'
+import { User } from '../types'
 
 export class UserService {
   private client: Http
@@ -9,17 +9,16 @@ export class UserService {
   }
 
   async getUser(id: number): Promise<User> {
-    try {
-      const user: User = await this.client.request({
+    const user: User = await this.client.request(
+      {
         url: `/users/${id}`,
-        method: 'GET'
-      },{
-        timeout: 3000
-      })
+        method: 'GET',
+      },
+      {
+        timeout: 3000,
+      }
+    )
 
-      return user
-    } catch(error) {
-      throw error
-    }
+    return user
   }
 }

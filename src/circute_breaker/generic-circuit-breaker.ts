@@ -1,10 +1,12 @@
-import Redis from "ioredis";
-import CircuitBreaker from "opossum";
+import Redis from 'ioredis'
+import CircuitBreaker from 'opossum'
 
 const CACHE_TTL = 5
 const STALE_CACHE_TTL = 6000
-export abstract class GenericCircuitBreaker <TI extends unknown[] = unknown[], TR = unknown> extends CircuitBreaker<TI, TR>{
-
+export abstract class GenericCircuitBreaker<TI extends unknown[] = unknown[], TR = unknown> extends CircuitBreaker<
+  TI,
+  TR
+> {
   private label: string
   private failFallback: TR
   private redis: Redis
@@ -14,37 +16,35 @@ export abstract class GenericCircuitBreaker <TI extends unknown[] = unknown[], T
     redis: Redis,
     options: CircuitBreaker.Options<TI> = {
       errorThresholdPercentage: 10,
-      resetTimeout: 10000
+      resetTimeout: 10000,
     }
   ) {
-    super(
-      async(...args: TI): Promise<TR> => {
-        const cacheKey = this.getKey(args)
-        const staleCacheKey = this.getStaleKey(args)
-        
-        const dataFromCache = await redis.get(cacheKey)
-        if(dataFromCache) {
-          return JSON.parse(dataFromCache)
-        }
+    super(async (...args: TI): Promise<TR> => {
+      const cacheKey = this.getKey(args)
+      const staleCacheKey = this.getStaleKey(args)
 
-        const result:TR = await this.execute(args)
+      const dataFromCache = await redis.get(cacheKey)
+      if (dataFromCache) {
+        return JSON.parse(dataFromCache)
+      }
 
-        if(result) {
-          const data = JSON.stringify(result)
-          await redis.pipeline()
+      const result: TR = await this.execute(args)
+
+      if (result) {
+        const data = JSON.stringify(result)
+        await redis
+          .pipeline()
           .set(cacheKey, data, 'EX', CACHE_TTL)
           .set(staleCacheKey, data, 'EX', STALE_CACHE_TTL)
           .exec()
-        }
+      }
 
-        return result
-      },
-      options
-    )
+      return result
+    }, options)
 
     this.label = label
     this.redis = redis
-    this.fallback(async(...args: TI): Promise<TR> =>  await this.fallbackd(...args))
+    this.fallback(async (...args: TI): Promise<TR> => await this.fallbackd(...args))
     this.registerListeners()
   }
 
@@ -53,7 +53,7 @@ export abstract class GenericCircuitBreaker <TI extends unknown[] = unknown[], T
   private async fallbackd(...args: TI): Promise<TR> {
     const staleCacheKey = this.getStaleKey(args)
     const dataFromCache = await this.redis.get(staleCacheKey)
-    if(dataFromCache) {
+    if (dataFromCache) {
       return JSON.parse(dataFromCache)
     }
     return this.failFallback
@@ -61,14 +61,14 @@ export abstract class GenericCircuitBreaker <TI extends unknown[] = unknown[], T
 
   private getKey(args: unknown[]): string {
     let key: string = this.label
-    if(args.length > 0) {
+    if (args.length > 0) {
       key += `:${args.join('-')}`
     }
     return key
   }
 
   private getStaleKey(args: TI): string {
-    return this.getKey(args.slice(0, args.length-1)).concat(':stale')
+    return this.getKey(args.slice(0, args.length - 1)).concat(':stale')
   }
 
   private registerListeners() {

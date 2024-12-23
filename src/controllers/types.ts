@@ -1,9 +1,9 @@
 export type Post = {
-  id: number,
+  id: number
   title: string
   author: string
   text: string
-  comments: Comment[] 
+  comments: Comment[]
 }
 
 export type Comment = {
@@ -11,6 +11,6 @@ export type Comment = {
   text: string
 }
 
-export type PostItem = Pick<Post,'id' | 'title'> &{
+export type PostItem = Pick<Post, 'id' | 'title'> & {
   author: string
 }

@@ -1,17 +1,17 @@
 export type Post = {
-  id: number,
+  id: number
   title: string
   authorId: number
   text: string
 }
 
 export type User = {
-  id: number,
+  id: number
   name: string
 }
 
 export type Comment = {
-  id: number,
+  id: number
   userId: number
   postId: number
   text: string

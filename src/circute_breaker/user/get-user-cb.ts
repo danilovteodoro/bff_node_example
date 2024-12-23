@@ -1,7 +1,8 @@
-import { UserService } from "services/user";
-import { User } from "services/types";
-import { GenericCircuitBreaker } from "circute_breaker/GenericCircuitBreaker";
-import Redis from "ioredis";
+import Redis from 'ioredis'
+
+import { GenericCircuitBreaker } from 'circute_breaker/generic-circuit-breaker'
+import { User } from 'services/types'
+import { UserService } from 'services/user'
 
 export class GetUserCb extends GenericCircuitBreaker<number[], User> {
   private userService: UserService
