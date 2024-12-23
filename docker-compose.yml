@@ -1,0 +1,7 @@
+version: '2.31.0'
+
+services:
+  redis:
+   image: 'redis:7.4.1-alpine'
+   ports:
+    - 6379:6379
