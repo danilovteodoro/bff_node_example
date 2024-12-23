@@ -10,10 +10,21 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@eslint/compat": "^1.2.4",
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.17.0",
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.2",
     "@types/redis": "^4.0.10",
-    "typescript": "^5.7.2"
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-import-resolver-typescript": "^3.7.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-unicorn": "^56.0.1",
+    "globals": "^15.14.0",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.1"
   },
   "dependencies": {
     "@types/opossum": "^8.1.8",
