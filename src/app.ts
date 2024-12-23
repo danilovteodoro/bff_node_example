@@ -1,3 +1,4 @@
+import Redis from 'ioredis'
 import { PostController } from './controllers/post/post'
 import express from 'express'
 
@@ -7,7 +8,8 @@ app.get('/', (req,res) => {
   res.send('Hello World!2')
 })
 
-const postController: PostController = new PostController()
+const redis = new Redis()
+const postController: PostController = new PostController(redis)
 app.get('/posts', async(req, res) => {
   const posts = await postController.getPosts()
   res.json(posts)

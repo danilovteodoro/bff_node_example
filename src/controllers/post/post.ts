@@ -11,6 +11,7 @@ import { GetPostsCb } from '../../circute_breaker/post/getPostsCb';
 import { GetUserCb } from "../../circute_breaker/user/getUserCb";
 import { GetCommentsCb } from "../../circute_breaker/comment/getCommentsCb";
 import { GetPostCb } from "../../circute_breaker/post/getPostCb";
+import Redis from "ioredis";
 
 export class PostController {
 
@@ -19,15 +20,15 @@ export class PostController {
   private cbGetUser: GetUserCb
   private cbGetComments: GetCommentsCb
 
-  constructor() {
+  constructor(redis: Redis) {
     const postService = new PostService()
     const userService = new UserService()
     const commentService = new CommentService()
     
-    this.cbGetPosts = new GetPostsCb(postService)
-    this.cbGetPost = new GetPostCb(postService)
-    this.cbGetUser = new GetUserCb(userService)
-    this.cbGetComments = new GetCommentsCb(commentService)
+    this.cbGetPosts = new GetPostsCb(postService, redis)
+    this.cbGetPost = new GetPostCb(postService, redis)
+    this.cbGetUser = new GetUserCb(userService, redis)
+    this.cbGetComments = new GetCommentsCb(commentService, redis)
   }
 
   async getPosts(): Promise<PostItem[]>{

@@ -1,11 +1,12 @@
 import { UserService } from "services/user";
 import { User } from "services/types";
 import { GenericCircuitBreaker } from "circute_breaker/GenericCircuitBreaker";
+import Redis from "ioredis";
 
 export class GetUserCb extends GenericCircuitBreaker<number[], User> {
   private userService: UserService
-  constructor(userService: UserService) {
-    super('getUser')
+  constructor(userService: UserService, redis: Redis) {
+    super('getUser', redis)
     this.userService = userService
   }
 

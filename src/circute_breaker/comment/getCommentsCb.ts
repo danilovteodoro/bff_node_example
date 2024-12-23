@@ -1,12 +1,13 @@
 import { GenericCircuitBreaker } from "circute_breaker/GenericCircuitBreaker";
+import Redis from "ioredis";
 import { CommentService } from "services/comment";
 import { Comment } from "services/types";
 
 export class GetCommentsCb extends GenericCircuitBreaker<number[], Comment[]> {
 
   private commentService: CommentService
-  constructor(commentService: CommentService) {
-    super('getComments')
+  constructor(commentService: CommentService, redis: Redis) {
+    super('getComments', redis)
     this.commentService = commentService
   }
 

@@ -1,12 +1,13 @@
 import { GenericCircuitBreaker } from "circute_breaker/GenericCircuitBreaker";
+import Redis from "ioredis";
 import { PostService } from "services/post";
 import { Post } from "services/types";
 
 
 export class GetPostsCb extends GenericCircuitBreaker<unknown[], Post[]> {
   private postService: PostService
-  constructor(postService: PostService) {
-    super('getPosts', {
+  constructor(postService: PostService, redis: Redis) {
+    super('getPosts', redis, {
       errorThresholdPercentage: 90,
       resetTimeout: 10000
     })
