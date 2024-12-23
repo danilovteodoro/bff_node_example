@@ -6,7 +6,7 @@ import { Post } from "services/types";
 export class GetPostsCb extends GenericCircuitBreaker<unknown[], Post[]> {
   private postService: PostService
   constructor(postService: PostService) {
-    super( {
+    super('getPosts', {
       errorThresholdPercentage: 90,
       resetTimeout: 10000
     })

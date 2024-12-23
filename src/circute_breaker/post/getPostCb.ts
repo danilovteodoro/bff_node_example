@@ -6,7 +6,7 @@ export class GetPostCb extends GenericCircuitBreaker<number[], Post> {
 
   private postService: PostService
   constructor(postService: PostService) {
-    super( {
+    super('getPost',{
       errorThresholdPercentage: 90,
       resetTimeout: 10000
     })

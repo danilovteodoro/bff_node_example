@@ -5,7 +5,7 @@ import { GenericCircuitBreaker } from "circute_breaker/GenericCircuitBreaker";
 export class GetUserCb extends GenericCircuitBreaker<number[], User> {
   private userService: UserService
   constructor(userService: UserService) {
-    super()
+    super('getUser')
     this.userService = userService
   }
 

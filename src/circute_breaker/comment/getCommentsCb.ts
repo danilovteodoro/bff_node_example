@@ -6,7 +6,7 @@ export class GetCommentsCb extends GenericCircuitBreaker<number[], Comment[]> {
 
   private commentService: CommentService
   constructor(commentService: CommentService) {
-    super()
+    super('getComments')
     this.commentService = commentService
   }
 
