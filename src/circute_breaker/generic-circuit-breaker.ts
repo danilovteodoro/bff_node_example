@@ -68,7 +68,8 @@ export abstract class GenericCircuitBreaker<TI extends unknown[] = unknown[], TR
   }
 
   private getStaleKey(args: TI): string {
-    return this.getKey(args.slice(0, args.length - 1)).concat(':stale')
+    const filtered = args.filter((a) => !(a instanceof Error))
+    return this.getKey(filtered).concat(':stale')
   }
 
   private registerListeners() {

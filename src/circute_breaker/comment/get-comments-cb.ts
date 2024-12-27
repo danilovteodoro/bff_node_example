@@ -16,6 +16,8 @@ export class GetCommentsCb extends GenericCircuitBreaker<number[], Comment[]> {
   }
 
   async getComments(postId: number): Promise<Comment[]> {
+    const { successes, fallbacks, failures, rejects } = this.stats
+    console.log({ successes, fallbacks, failures, rejects })
     return this.fire(postId)
   }
 }

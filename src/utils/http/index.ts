@@ -35,28 +35,6 @@ export class Http {
     return response
   }
 
-  // async get<T>(
-  //   path: string,
-  //   queryParams: Record<string, any> | undefined = undefined,
-  //   timeout: number = 300
-  // ): Promise<T> {
-  //   console.log('timeout '+ timeout)
-  //   // const response: AxiosResponse<T> = await this.client.get(path, {params: queryParams})
-
-  //   const cancelTimeout = new AbortController()
-  //   const cancelRequest = new AbortController()
-
-  //   const response: T = await Promise.race([
-  //      this.makeRquest({
-  //       url: path,
-  //       params: queryParams
-  //     }, cancelTimeout, cancelRequest),
-
-  //     this.timeout(timeout, cancelTimeout, cancelRequest)
-  //   ])
-  //   return response
-  // }
-
   private async makeRquest(requestConfig: AxiosRequestConfig, cancelation: Calcelation) {
     try {
       const response = await this.client.request({
